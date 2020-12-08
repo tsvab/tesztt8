@@ -37,7 +37,7 @@ class FavoriteService {
         params;
     url = Uri.encodeFull(url);
 
-    //print("url: $url");
+    print("url: $url");
     final response = await http.get(url);
     //print("response.body: ${response.body}");
     //print("response.statusCode: ${response.statusCode}");
@@ -79,7 +79,7 @@ class FavoriteService {
     url = Uri.encodeFull(url);
 
     final response = await http.get(url);
-    //print("url: $url");
+    print("url: $url");
     if (response.statusCode == 200) {
       //print(json.decode(response.body));
       return json.decode(response.body)['result'];
@@ -123,7 +123,7 @@ class NoteService {
         params;
     url = Uri.encodeFull(url);
     final response = await http.get(url);
-    //print("url: $url");
+    print("url: $url");
     if (response.statusCode == 200) {
       return json.decode(response.body)['result'];
     } else {
@@ -162,7 +162,7 @@ class NoteService {
     url = Uri.encodeFull(url);
 
     final response = await http.get(url);
-    //print("url: $url");
+    print("url: $url");
     if (response.statusCode == 200) {
       //print(json.decode(response.body));
       return json.decode(response.body)['result'];

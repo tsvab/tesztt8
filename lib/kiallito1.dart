@@ -94,6 +94,7 @@ Future<List<dynamic>> fetchKiallitok(String prid, String searchmode) async {
   }
 
   final response = await http.get(url);
+  //print("url: $url");
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
@@ -117,6 +118,7 @@ Future<Kiallito> fetchKiallito(String ppid) async {
           ppid +
           "&pridlist=CSA19&orgid=00158376&lngid=hu&bl=%2F6%2Findex.php%3Fajax%3Dkialllist1-grid%26ap8p%3D1%26lngid%3Dhu%26mode%3DK%26orgid%3D00158376%26page%3D3%26pagesize%3D50%26pridlist%3DCSA19%26r%3Dkialllista%252Fkialllista1%252Flist%26up%3D1%26upevent%3Dconstruma&up=1&upevent=construma&mode=K&elogtext1=&app=1";
   final response = await http.get(url);
+  //print("url: $url");
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,

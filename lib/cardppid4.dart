@@ -15,6 +15,7 @@ import 'calendarmodalcupertino1.dart';
 import 'constants2.dart' as Constant;
 import 'kiallito1.dart';
 import 'services2.dart';
+import 'package:badges/badges.dart';
 
 //import 'dart:math';
 
@@ -144,38 +145,45 @@ class _CardPpid4State extends State<CardPpid4>
           fontWeightDelta: 1,
           color: Colors.black,
         );
-    return FutureBuilder(
-        //future: getKiallito(widget.ppid),
-        future: _getKiallito,
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          //print('kiallito: $kiallito');
-          if (snapshot.hasData) {
-            //print("FutureBuilder itt vagyok");
-            getNote();
-            getFavorite();
 
-            //return Text(kiallito.cegnev);
-            return cardppid4();
-          } else {
-            //return Container();
-            return Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CircularProgressIndicator(),
-                      ],
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context, _isFavorite);
+        return true;
+      },
+      child: FutureBuilder(
+          //future: getKiallito(widget.ppid),
+          future: _getKiallito,
+          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+            //print('kiallito: $kiallito');
+            if (snapshot.hasData) {
+              //print("FutureBuilder itt vagyok");
+              getNote();
+              getFavorite();
+
+              //return Text(kiallito.cegnev);
+              return cardppid4();
+            } else {
+              //return Container();
+              return Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        // crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          CircularProgressIndicator(),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          }
-        });
+                  ],
+                ),
+              );
+            }
+          }),
+    );
   }
 
   //https://stackoverflow.com/questions/54642710/tabbarview-with-dynamic-container-height
@@ -832,9 +840,23 @@ class _CardPpid4State extends State<CardPpid4>
     _tabbarview = [];
     if (true) {
       _tabbar.add(Tab(
-        child: Text(
-          'Leírás',
-          style: _textstyle,
+        // child: Text(
+        //   'Leírás',
+        //   style: _textstyle,
+        // ),
+        child: Badge(
+          child: Text(
+            'Leírása',
+            style: _textstyle,
+          ),
+          badgeContent: Text('12'),
+          shape: BadgeShape.square,
+          borderRadius: BorderRadius.circular(0),
+          position: BadgePosition.topEnd(top: -12, end: -20),
+          padding: EdgeInsets.all(1),
+          showBadge: true,
+          // position: BadgePosition.topEnd(top: 10, end: 10),
+          //position: BadgePosition.topEnd(top: -10, end: -5),
         ),
       ));
       _tabbarview.add(Column(
