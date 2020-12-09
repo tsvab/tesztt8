@@ -137,6 +137,7 @@ class _CardPpid6State extends State<CardPpid6>
     super.dispose();
   }
 
+  // ide teszek egy megjegyzést
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
