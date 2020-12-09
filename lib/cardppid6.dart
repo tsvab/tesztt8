@@ -71,9 +71,10 @@ class _CardPpid6State extends State<CardPpid6>
       textsnack = 'A kedvencekhez hozzáadás nem sikerült!';
     }
 
-    //ScaffoldMessenger.of(context).showSnackBar(
-    _scaffoldKey.currentState.showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
+      //_scaffoldKey.currentState.showSnackBar(
       SnackBar(
+        key: _scaffoldKey,
         behavior: SnackBarBehavior.fixed,
         content: Text(textsnack),
         duration: Duration(milliseconds: 1500),
