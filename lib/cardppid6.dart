@@ -63,9 +63,9 @@ class _CardPpid6State extends State<CardPpid6>
         kiallito.favorite = !kiallito.favorite;
       });
       if (kiallito.favorite) {
-        textsnack = 'Hozzáadva a kedvencekhez!!!!!!!!!!!';
+        textsnack = 'Hozzáadvabbbbbbb a kedvencekhez!!!!!!!!!!!';
       } else {
-        textsnack = 'Eltávoltítva a kedvencekből!';
+        textsnack = 'Eltávoltítvaaaaaaaaaaaaaaaaaaaaaaa a kedvencekből!';
       }
     } else {
       textsnack = 'A kedvencekhez hozzáadás nem sikerült!';
