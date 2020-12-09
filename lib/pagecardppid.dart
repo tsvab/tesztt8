@@ -9,9 +9,9 @@ class PageCardPpid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('PagePpid'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('PagePpid'),
+      // ),
       body: CardPpid6(ppid: ppid),
     );
   }

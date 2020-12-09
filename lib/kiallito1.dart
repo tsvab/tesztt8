@@ -14,20 +14,23 @@ class Kiallito {
   final String web;
   final List kategorialista;
   final List markalista;
-  final bool favourite;
+  var favorite;
+  var note;
 
-  Kiallito(
-      {this.ppid = '',
-      this.cegnev = '',
-      this.urllogo = '',
-      this.standlista,
-      this.magunkrol = '',
-      this.kapcsolat = '',
-      this.email = '',
-      this.web = '',
-      this.kategorialista,
-      this.markalista,
-      this.favourite = false});
+  Kiallito({
+    this.ppid = '',
+    this.cegnev = '',
+    this.urllogo = '',
+    this.standlista,
+    this.magunkrol = '',
+    this.kapcsolat = '',
+    this.email = '',
+    this.web = '',
+    this.kategorialista,
+    this.markalista,
+    this.favorite = false,
+    this.note = '',
+  });
 
   String get helylist {
     String ret = '';
@@ -75,12 +78,14 @@ class Kiallito {
       web: json['web'] ?? '',
       kategorialista: json['kategorialista'] ?? '',
       markalista: json['markalista'] ?? '',
+      favorite: json['favorite'] ?? '',
+      note: json['note'] ?? '',
     );
   }
 
   @override
   String toString() =>
-      '$runtimeType(${this.ppid}, \"${this.cegnev}\", \"${this.urllogo}\", \"${this.standlista}\, \"${this.kapcsolat}\", \"${this.markalista}\")';
+      '$runtimeType(${this.ppid}, \"${this.cegnev}\", \"${this.urllogo}\", \"${this.standlista}\, \"${this.kapcsolat}\", \"${this.markalista}\", \"${this.favorite}\", , \"${this.note}\")';
 }
 
 Future<List<dynamic>> fetchKiallitok(String prid, String searchmode) async {
@@ -94,7 +99,7 @@ Future<List<dynamic>> fetchKiallitok(String prid, String searchmode) async {
   }
 
   final response = await http.get(url);
-  //print("url: $url");
+  print("url: $url");
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
@@ -111,15 +116,17 @@ Future<List<dynamic>> fetchKiallitok(String prid, String searchmode) async {
   }
 }
 
-Future<Kiallito> fetchKiallito(String ppid) async {
+Future<Kiallito> fetchKiallito(String ppid, String user) async {
   final String url =
       //"https://eregistrator.hu/6/index.php?r=kialllista/kialllista1/list&pridlist=CSA19&orgid=00158376&lngid=hu&pagesize=50&mode=K&up=1&upevent=ipar-napjai&app=1";
-      "https://eregistrator.hu/6/index.php?r=kialllista/kialllista1/ppid&ppid=" +
+      "https://eregistrator.hu/6/index.php?r=kialllista/kialllista1/ppid" +
+          "&ppid=" +
           ppid +
+          "&user=" +
+          user +
           "&pridlist=CSA19&orgid=00158376&lngid=hu&bl=%2F6%2Findex.php%3Fajax%3Dkialllist1-grid%26ap8p%3D1%26lngid%3Dhu%26mode%3DK%26orgid%3D00158376%26page%3D3%26pagesize%3D50%26pridlist%3DCSA19%26r%3Dkialllista%252Fkialllista1%252Flist%26up%3D1%26upevent%3Dconstruma&up=1&upevent=construma&mode=K&elogtext1=&app=1";
   final response = await http.get(url);
-  //print("url: $url");
-
+  // print("url: $url");
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.

@@ -25,13 +25,7 @@ class _CardPpid6State extends State<CardPpid6>
   Kiallito kiallito;
   Future<bool> _getKiallitoDone;
 
-  bool _noteInitializing = false;
-  bool _noteInitDone = false;
-
-  bool _favoriteInitializing = false;
-  bool _favoriteInitDone = false;
-
-  bool _isFavorite = false;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   TabController _tabController;
   int _tabIndex = 0;
@@ -47,43 +41,28 @@ class _CardPpid6State extends State<CardPpid6>
   String _noteSaved = '';
 
   Future<bool> kiallitoInit(String ppid) async {
-    kiallito = await fetchKiallito(ppid);
+    final user = 'AU0000025';
+    kiallito = await fetchKiallito(ppid, user);
+    _noteController = TextEditingController(text: kiallito.note);
+
     setTabs();
     return true;
   }
 
-  Future<void> getFavorite(String ppid) async {
-    if (!_favoriteInitDone && !_favoriteInitializing) {
-      _favoriteInitializing = true;
-      const reltid = Constant.RELTID_PPID_USER;
-      const idv1 = 'AU0000025';
-      final idv2 = ppid;
-
-      await FavoriteService.get(reltid, idv1, idv2).then((value) {
-        setState(() {
-          _isFavorite = value == 0 ? false : true;
-        });
-        _favoriteInitDone = true;
-      });
-      _favoriteInitializing = false;
-    }
-  }
-
-  setFavorite() async {
+  Future<void> setFavorite() async {
     const reltid = Constant.RELTID_PPID_USER;
-    const idv1 = 'AU0000025';
-    final idv2 = kiallito.ppid;
-    final aktiv = _isFavorite ? '0' : '1';
-    //print('setFavorite előtt');
+    final idv1 = kiallito.ppid;
+    const idv2 = 'AU0000025';
+    final aktiv = kiallito.favorite ? '0' : '1';
     int result = await FavoriteService.set(reltid, idv1, idv2, aktiv);
 
     String textsnack;
 
     if (result == 1) {
       setState(() {
-        _isFavorite = !_isFavorite;
+        kiallito.favorite = !kiallito.favorite;
       });
-      if (_isFavorite) {
+      if (kiallito.favorite) {
         textsnack = 'Hozzáadva a kedvencekhez!';
       } else {
         textsnack = 'Eltávoltítva a kedvencekből!';
@@ -92,38 +71,44 @@ class _CardPpid6State extends State<CardPpid6>
       textsnack = 'A kedvencekhez hozzáadás nem sikerült!';
     }
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(textsnack),
-      duration: Duration(milliseconds: 1500),
-      // action: SnackBarAction(
-      //   label: 'ACTION',
-      //   onPressed: () {},
-      // ),
-    ));
+    //ScaffoldMessenger.of(context).showSnackBar(
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        behavior: SnackBarBehavior.fixed,
+        content: Text(textsnack),
+        duration: Duration(milliseconds: 1500),
+        // action: SnackBarAction(
+        //   label: 'ACTION',
+        //   onPressed: () {},
+        // ),
+      ),
+    );
   }
 
-  Future<void> getNote(String ppid) async {
-    if (!_noteInitDone && !_noteInitializing) {
-      _noteInitializing = true;
-      const reltid = Constant.RELTID_PPID_USER_TEXT;
-      const idv1 = 'AU0000025';
-      final idv2 = ppid;
-
-      await NoteService.get(reltid, idv1, idv2).then((value) {
-        setState(() {
-          _noteSaved = value;
-          _noteController.text = value;
-        });
-        _noteInitDone = true;
-      });
-      _noteInitializing = true;
-    }
-  }
+  // Future<void> getNote(String ppid) async {
+  //   if (!_noteInitDone && !_noteInitializing) {
+  //     _noteInitializing = true;
+  //     const reltid = Constant.RELTID_PPID_USER_TEXT;
+  //     const idv1 = 'AU0000025';
+  //     final idv2 = ppid;
+  //
+  //     await NoteService.get(reltid, idv1, idv2).then((value) {
+  //       setState(() {
+  //         _noteSaved = value;
+  //         _noteController.text = value;
+  //       });
+  //       _noteInitDone = true;
+  //     });
+  //     _noteInitializing = true;
+  //   }
+  // }
 
   Future<void> setNote(String note) async {
     const reltid = Constant.RELTID_PPID_USER_TEXT;
-    const idv1 = 'AU0000025';
-    final idv2 = kiallito.ppid;
+    final idv1 = kiallito.ppid;
+
+    /// TODO a user-t ki kell oldani
+    const idv2 = 'AU0000025';
     final text1 = note;
     final aktiv = '1';
 
@@ -138,7 +123,6 @@ class _CardPpid6State extends State<CardPpid6>
 
   @override
   void initState() {
-    _noteController = TextEditingController(text: '');
     _getKiallitoDone = kiallitoInit(widget.ppid);
     super.initState();
   }
@@ -163,8 +147,6 @@ class _CardPpid6State extends State<CardPpid6>
         future: _getKiallitoDone,
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
-            getNote(kiallito.ppid);
-            getFavorite(kiallito.ppid);
             return cardppid();
           } else {
             return Container(
@@ -187,18 +169,52 @@ class _CardPpid6State extends State<CardPpid6>
   }
 
   Widget cardppid() {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: ListView(
-        children: [
-          logo(),
-          cegnev(),
-          helylist(),
-          kedvencekhez(),
-          tab1(),
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Text('ez egy fejléc'),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: 0,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.mail),
+            label: 'Messages',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          )
         ],
+      ),
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        onHorizontalDragEnd: (dragEndDetails) {
+          if (dragEndDetails.primaryVelocity < 0) {
+            if (_tabController.index < _tabController.length - 1) {
+              _tabController.index += 1;
+            }
+          } else if (dragEndDetails.primaryVelocity > 0) {
+            if (_tabController.index > 0) {
+              _tabController.index -= 1;
+            }
+          }
+        },
+        child: ListView(
+          children: [
+            logo(),
+            cegnev(),
+            helylist(),
+            kedvencekhez(),
+            tab1(),
+          ],
+        ),
       ),
     );
   }
@@ -350,24 +366,24 @@ class _CardPpid6State extends State<CardPpid6>
   }
 
   Widget kedvencekhez() {
-    String _textbutton = _isFavorite ? 'Törlés a kedvencekből' : 'Kedvencekhez';
+    print(kiallito);
+    String _textbutton =
+        kiallito.favorite ? 'Törlés a kedvencekből' : 'Kedvencekhez';
 
-    return !_favoriteInitDone ?? false
-        ? Container()
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              RaisedButton(
-                child: Text(_textbutton),
-                //padding: EdgeInsets.all(10),
-                shape: RoundedRectangleBorder(
-                    borderRadius: new BorderRadius.circular(30.0)),
-                onPressed: () {
-                  setFavorite();
-                },
-              ),
-            ],
-          );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        RaisedButton(
+          child: Text(_textbutton),
+          //padding: EdgeInsets.all(10),
+          shape: RoundedRectangleBorder(
+              borderRadius: new BorderRadius.circular(30.0)),
+          onPressed: () {
+            setFavorite();
+          },
+        ),
+      ],
+    );
   }
 
   Widget cegnev() {
