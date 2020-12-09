@@ -68,7 +68,8 @@ class _CardPpid6State extends State<CardPpid6>
         textsnack = 'Eltávoltítvaaaaaaaaaaaaaaaaaaaaaaa a kedvencekből!';
       }
     } else {
-      textsnack = 'A kedvencekhez hozzáadás nem sikerült!';
+      textsnack =
+          'A kedvencekhez hozzáadás nem sikerült hibaüzenettttttttttttttttttttttttt!';
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
