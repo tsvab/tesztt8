@@ -176,7 +176,7 @@ class _CardPpid6State extends State<CardPpid6>
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('ez egy fejléc'),
+        title: Text('ez egy fejléccc'),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
