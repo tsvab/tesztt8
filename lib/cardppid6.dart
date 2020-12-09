@@ -72,6 +72,7 @@ class _CardPpid6State extends State<CardPpid6>
           'A kedvencekhez hozzáadás nem sikerült hibaüzenettttttttttttttttttttttttt!';
     }
 
+    // ide is egy megjegyzés......
     ScaffoldMessenger.of(context).showSnackBar(
       //_scaffoldKey.currentState.showSnackBar(
       SnackBar(
