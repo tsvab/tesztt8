@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:grouped_list/grouped_list.dart';
 //import 'api1.dart' ;
 import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:grouped_list/grouped_list.dart';
+
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'kiallito1.dart';
 import 'listcard1.dart';
@@ -16,7 +18,8 @@ class List2 extends StatefulWidget {
 }
 
 class _List2State extends State<List2> {
-  var _elements = List<dynamic>();
+  //var _elements = List<dynamic>();
+  List _elements;
 
   Future<bool> getKiallitok() async {
     // Future<void> getKiallito() async {
